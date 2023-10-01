@@ -2,23 +2,38 @@
 using System.IO;
 using System.Linq;
 
-class Program
+ class Program
 {
-    static void Main(string[] args)
+     static void Main(string[] args)
     {
-        // Read the matrix from a text file
-        char[,] matrix = ReadMatrixFromFile("matrix.txt");
-
-        // Find the longest matching adjacent characters
-        string longestString = FindLongestSequence(matrix);
-
-        // Print the longest string
-        Console.WriteLine(longestString);
-        Console.ReadLine();
+        try
+        {
+            string filePath = "matrix.txt";
+            char[,] matrix = ReadMatrixFromFile(filePath);
+            string longestString = FindLongestSequence(matrix);
+            Console.WriteLine("Longest matching sequence: " + longestString);
+        }
+        catch (FileNotFoundException ex)
+        {
+            Console.WriteLine("Error: File not found - " + ex.Message);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("An error occurred: " + ex.Message);
+        }
+        finally
+        {
+            Console.ReadLine();
+        }
     }
 
     static char[,] ReadMatrixFromFile(string filePath)
     {
+        if (!File.Exists(filePath))
+        {
+            throw new FileNotFoundException("The specified file does not exist.");
+        }
+
         string[] lines = File.ReadAllLines(filePath);
         int rows = lines.Length;
         int columns = lines[0].Split(',').Length;
